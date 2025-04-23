@@ -10,12 +10,11 @@ test('test', async ({ page }) => {
 
   try {
     await page.locator('button.btn.btn-primary-dark.btn-add-to-basket', { timeout: 10000 }).first().click();
-    // Czekanie na widoczność i kliknięcie przycisku "Nie potrzebuję dodatkowej ochrony"
     const noProtectionButton = page.getByText('Nie potrzebuję dodatkowej ochrony', { exact: true }).last();
-    await noProtectionButton.waitFor({ state: 'visible', timeout: 10000 }); // Zwiększony timeout
+    await noProtectionButton.waitFor({ state: 'visible', timeout: 10000 });
     await noProtectionButton.click();
-    // Opcjonalnie: zamknięcie ewentualnego innego okna dialogowego
     await page.getByRole('button', { name: 'zamknij', exact: true, timeout: 3000 }).catch(() => {});
+    await page.getByRole('button', { name: 'koszyk', exact: true }).click()
   } catch (error) {
     console.error(error);
   }

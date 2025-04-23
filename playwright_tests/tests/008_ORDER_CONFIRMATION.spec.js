@@ -9,12 +9,17 @@ test('test', async ({ page }) => {
 
     try {
         await page.locator('button.btn.btn-primary-dark.btn-add-to-basket', { timeout: 10000 }).first().click();
-        await page.getByRole('button', { name: 'Nie, dziękuję', timeout: 10000 }).catch(() => {});
-        await page.getByRole('button', { name: 'zamknij', exact: true, timeout: 10000 }).catch(() => {});
+        
+        const noProtectionButton = page.getByText('Nie potrzebuję dodatkowej ochrony', { exact: true }).last();
+        await noProtectionButton.waitFor({ state: 'visible', timeout: 1000 });
+        await noProtectionButton.click();
+        await page.getByRole('button', { name: 'zamknij', exact: true, timeout: 1000 }).catch(() => {}); 
+
         await page.getByRole('button', { name: 'koszyk', exact: true }).click();
+
         await page.getByRole('button', { name: 'Wybierz dostawę i płatność' }).click();
-        await page.getByText('Kontynuuj bez dodawania usług').click({ timeout: 10000 });
-        await page.getByText('Kup bez rejestracji').click({ timeout: 10000 });
+        await page.getByText('Kontynuuj bez dodawania usług').click({ timeout: 5000 });
+        await page.getByText('Kup bez rejestracji').click({ timeout: 5000 });
         await page.getByRole('textbox', { name: 'imię' }).fill('Jan');
         await page.getByRole('textbox', { name: 'nazwisko' }).fill('Kowalski');
         await page.getByRole('textbox', { name: 'adres e-mail' }).fill('jankowalski@gmail.com');
@@ -26,21 +31,21 @@ test('test', async ({ page }) => {
         await page.getByText('Lublin', { exact: true }).click();
 
         const deliveryRadio = page.locator('div:nth-child(2) > .col-10 > .name-col > .form-control-input > .radio > .input').first();
-        await expect(deliveryRadio).toBeVisible({ timeout: 10000 });
+        await expect(deliveryRadio).toBeVisible({ timeout: 1000 });
         await deliveryRadio.click();
-        await expect(deliveryRadio).toBeChecked({ timeout: 10000 });
+        await expect(deliveryRadio).toBeChecked({ timeout: 1000 });
 
         const blikRadio = page.locator('label').filter({ hasText: 'Blik' }).locator('span').first();
-        await expect(blikRadio).toBeVisible({ timeout: 10000 });
+        await expect(blikRadio).toBeVisible({ timeout: 1000 });
         await blikRadio.click();
-        await expect(blikRadio).toBeChecked({ timeout: 10000 });
+        await expect(blikRadio).toBeChecked({ timeout: 1000 });
 
         await page.getByRole('button', { name: 'Przejdź dalej' }).click();
         const termsCheckbox = page.locator('#fixed-box span').first();
-        await expect(termsCheckbox).toBeVisible({ timeout: 10000 });
+        await expect(termsCheckbox).toBeVisible({ timeout: 1000 });
         await termsCheckbox.click();
         await page.getByRole('button', { name: 'Zamawiam i płacę' }).click();
-        await page.getByRole('link', { name: 'Przejdź do płatności', timeout: 15000 }).click();
+        await page.getByRole('link', { name: 'Przejdź do płatności', timeout: 1500 }).click();
 
     } catch (error) {
         console.error(error);

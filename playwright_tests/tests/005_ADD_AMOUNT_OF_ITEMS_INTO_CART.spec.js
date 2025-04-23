@@ -11,16 +11,20 @@ test('test', async ({ page }) => {
 
     try {
         await page.locator('button.btn.btn-primary-dark.btn-add-to-basket', { timeout: 10000 }).first().click();
-        await page.getByRole('button', { name: 'Nie, dziękuję', timeout: 3000 }).catch(() => {});
-        await page.getByRole('button', { name: 'zamknij', exact: true, timeout: 3000 }).catch(() => {});
+        const noProtectionButton = page.getByText('Nie potrzebuję dodatkowej ochrony', { exact: true }).last();
+        await noProtectionButton.waitFor({ state: 'visible', timeout: 10000 });
+        await noProtectionButton.click();
+        
+        await page.getByRole('button', { name: 'zamknij', exact: true, timeout: 3000 }).catch(() => {}); 
 
         await page.getByRole('button', { name: 'koszyk', exact: true }).click();
-        const quantityInput = page.locator('.quantity-input input');
+        const quantityInput = page.locator('.quantity-select');
         await quantityInput.click();
-        await quantityInput.fill('2');
+        await quantityInput.fill('quantity-select').click('2');
         await page.locator('.basket-summary').click();
-        await expect(quantityInput).toHaveValue('2', { timeout: 10000 });
-
+        await page.waitForTimeout(500);
+        await expect(quantityInput).toHaveValue('2');
+        await expect(quantityInput).toHaveValue('1', { timeout: 2000 });
     } catch (error) {
         console.error(error);
     }

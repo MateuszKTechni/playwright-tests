@@ -11,11 +11,10 @@ test('test', async ({ page }) => {
 
     try {
         await page.locator('button.btn.btn-primary-dark.btn-add-to-basket', { timeout: 10000 }).first().click();
-        // Stabilniejsza obsługa okna "Nie potrzebuję dodatkowej ochrony"
         const noProtectionButton = page.getByText('Nie potrzebuję dodatkowej ochrony', { exact: true }).last();
         await noProtectionButton.waitFor({ state: 'visible', timeout: 10000 });
         await noProtectionButton.click();
-        await page.getByRole('button', { name: 'zamknij', exact: true, timeout: 3000 }).catch(() => {}); // Opcjonalne zamknięcie
+        await page.getByRole('button', { name: 'zamknij', exact: true, timeout: 3000 }).catch(() => {});
 
         await page.getByRole('button', { name: 'koszyk', exact: true }).click();
         const productRow = page.locator('.basket-item:has-text("Laptop Apple MacBook Air 13")');
